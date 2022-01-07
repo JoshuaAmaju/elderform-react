@@ -1,0 +1,104 @@
+{
+  "name": "@elderform/react",
+  "version": "0.0.0",
+  "license": "MIT",
+  "author": "Joshua Amaju",
+  "main": "dist/index.js",
+  "module": "dist/elderform-react.esm.js",
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "analyze": "size-limit",
+    "build": "dts build --name elderform-react",
+    "lint": "dts lint",
+    "prepare": "dts build --name elderform-react",
+    "size": "size-limit",
+    "start": "dts watch",
+    "test": "dts test --passWithNoTests",
+    "np": "np"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "dts lint"
+    }
+  },
+  "prettier": {
+    "printWidth": 80,
+    "semi": true,
+    "singleQuote": true,
+    "trailingComma": "es5"
+  },
+  "jest": {
+    "testEnvironment": "jsdom"
+  },
+  "peerDependencies": {
+    "@xstate/react": "^1.6.3",
+    "elderform": "^0.1.15",
+    "react": ">=16",
+    "xstate": "^4.27.0"
+  },
+  "engines": {
+    "node": ">=12"
+  },
+  "size-limit": [
+    {
+      "path": "dist/elderform-react.cjs.production.min.js",
+      "limit": "10 KB"
+    },
+    {
+      "path": "dist/elderform-react.esm.js",
+      "limit": "10 KB"
+    }
+  ],
+  "devDependencies": {
+    "@size-limit/preset-small-lib": "^7.0.5",
+    "@testing-library/react": "^12.1.2",
+    "@tsconfig/create-react-app": "^1.0.2",
+    "@tsconfig/recommended": "^1.0.1",
+    "@types/react": "^17.0.38",
+    "@types/react-dom": "^17.0.11",
+    "dts-cli": "^1.1.5",
+    "husky": "^7.0.4",
+    "np": "^7.6.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "size-limit": "^7.0.5",
+    "tslib": "^2.3.1",
+    "typescript": "^4.5.4",
+    "zod": "^3.11.6"
+  },
+  "dependencies": {
+    "@xstate/react": "^1.6.3",
+    "elderform": "^0.1.15",
+    "xstate": "^4.27.0"
+  },
+  "description": "Elderform tools for React",
+  "directories": {
+    "example": "example",
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JoshuaAmaju/elderform-react.git"
+  },
+  "keywords": [
+    "form",
+    "react",
+    "formik",
+    "xstate",
+    "elderform",
+    "validation",
+    "validate",
+    "hook"
+  ],
+  "bugs": {
+    "url": "https://github.com/JoshuaAmaju/elderform-react/issues"
+  },
+  "homepage": "https://github.com/JoshuaAmaju/elderform-react#readme",
+  "publishConfig": {
+    "access": "public"
+  }
+}
