@@ -70,11 +70,6 @@
     "typescript": "^4.5.4",
     "zod": "^3.11.6"
   },
-  "dependencies": {
-    "@xstate/react": "^1.6.3",
-    "elderform": "^0.1.15",
-    "xstate": "^4.27.0"
-  },
   "description": "Elderform tools for React",
   "directories": {
     "example": "example",
