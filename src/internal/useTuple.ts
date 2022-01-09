@@ -26,8 +26,9 @@ export const useTuple = <T = any, D = any, E = any, Es = any>([
 
   const {
     data,
-    schema,
     error,
+    actors,
+    schema,
     errors,
     states,
     values,
@@ -52,15 +53,13 @@ export const useTuple = <T = any, D = any, E = any, Es = any>([
     : (current.value as any);
 
   const handlers = useMemo<Handlers<T, Es>>(() => {
-    if (!schema || typeof schema === 'boolean') {
-      if (__DEV__) {
+    if (__DEV__) {
+      if (!schema || typeof schema === 'boolean') {
         console.warn('Cannot generate handlers without schema defined');
       }
-
-      return;
     }
 
-    const entries = Object.keys(schema).map((k) => {
+    const entries = Object.keys(actors).map((k) => {
       const id = k as keyof T;
       const value = values[id];
       const state = states[id] as any;
@@ -91,7 +90,7 @@ export const useTuple = <T = any, D = any, E = any, Es = any>([
     return Object.fromEntries(entries);
 
     // using size given react is unable to diff Map
-  }, [schema, states, errors.size, values, send]);
+  }, [actors, states, errors.size, values, send]);
 
   return [
     {
