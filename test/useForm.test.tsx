@@ -1,9 +1,8 @@
 import { fireEvent, render, waitFor } from '@testing-library/react';
-import { object } from 'elderform';
+import { object, createForm } from 'elderform';
 import * as React from 'react';
 import * as z from 'zod';
 import { useForm } from '../src';
-import { createForm } from 'elderform';
 
 const schema = object({
   name: (v: string) => z.string().parse(v),
