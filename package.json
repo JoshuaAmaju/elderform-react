@@ -34,12 +34,6 @@
   "jest": {
     "testEnvironment": "jsdom"
   },
-  "peerDependencies": {
-    "@xstate/react": "^1.6.3",
-    "elderform": "^0.1.15",
-    "react": ">=16",
-    "xstate": "^4.27.0"
-  },
   "engines": {
     "node": ">=12"
   },
@@ -95,5 +89,10 @@
   "homepage": "https://github.com/JoshuaAmaju/elderform-react#readme",
   "publishConfig": {
     "access": "public"
+  },
+  "peerDependencies": {
+    "@xstate/react": "^1.6.3",
+    "elderform": "^0.2.0-0",
+    "xstate": "^4.27.0"
   }
 }

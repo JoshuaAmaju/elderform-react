@@ -115,6 +115,14 @@ export const useTuple = <T = any, D = any, E = any, Es = any>([
       isSuccess: submitted,
       submittedWithoutError,
 
+      kill: (id) => {
+        send({ id, type: EventTypes.Kill });
+      },
+
+      spawn: (id, value) => {
+        send({ id, value, type: EventTypes.Spawn });
+      },
+
       cancel: () => {
         send(EventTypes.Cancel);
       },
