@@ -4,6 +4,8 @@ import * as React from 'react';
 import * as z from 'zod';
 import { useForm } from '../src';
 
+(global as any).__DEV__ = false;
+
 const schema = object({
   name: (v: string) => z.string().parse(v),
 });
