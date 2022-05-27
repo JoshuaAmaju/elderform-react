@@ -2,6 +2,6 @@
   "extends": "@tsconfig/create-react-app/tsconfig.json",
   "include": ["src", "types"],
   "compilerOptions": {
-    "lib": ["ESNext"]
+    "lib": ["ESNext", "DOM"]
   }
 }

@@ -1,13 +1,14 @@
-import { Handlers, SubscriptionValue, Service as _Service } from 'elderform';
+import { actor } from 'elderform';
+import type { Actions, Ctx, Values, ActorState } from 'elderform';
 
-export type Service<T, D, E, Es> = Omit<
-  _Service<T, D, E, Es>,
-  '__service' | '__generate' | 'subscribe'
->;
+export type State<T extends object, D, E, FE> = Actions<T, D> &
+  Values<T, D, E, FE> &
+  Pick<Ctx<T, D, E, FE>, 'actors'>;
 
-type T = _Service<any, any, any, any>[];
+export type FieldActions<T> = {
+  set: (value: T) => void;
+  validate: (value?: T) => void;
+};
 
-export type TupleReturn<T, D, E, Es> = [
-  Service<T, D, E, Es> & SubscriptionValue<T, D, E, Es>,
-  Handlers<T, Es>
-];
+export type FieldState<T, E> = FieldActions<T> &
+  actor.Ctx<T, E> & { state: ActorState };

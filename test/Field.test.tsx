@@ -1,17 +1,20 @@
 import { render, waitFor } from '@testing-library/react';
-import { object } from 'elderform';
 import * as z from 'zod';
-import { Elder, Field } from '../src';
+import { Field, useForm, Form } from '../src';
+import { create } from 'elderform';
 
 (global as any).__DEV__ = false;
 
-const schema = object({
-  name: (v: string) => z.string().parse(v),
+const string = (v: string) => z.string().parse(v);
+
+const form = create<{ name: string }>({
+  onSubmit: () => {},
+  initialValues: { name: 'Joe' },
 });
 
 const Component = () => {
   return (
-    <Field name="name">
+    <Field name="name" validate={string}>
       {({ value }) => (
         <input readOnly type="text" data-testid="input" value={value as any} />
       )}
@@ -21,17 +24,17 @@ const Component = () => {
 
 describe('<Field>', () => {
   it('should render <input />', async () => {
-    const { getByTestId } = render(
-      <Elder
-        {...{
-          schema,
-          onSubmit: async () => '123',
-          initialValues: { name: 'Joe' },
-        }}
-      >
-        <Component />
-      </Elder>
-    );
+    const App = () => {
+      const state = useForm(form);
+
+      return (
+        <Form state={state}>
+          <Component />
+        </Form>
+      );
+    };
+
+    const { getByTestId } = render(<App />);
 
     await waitFor(() => getByTestId('input'));
 

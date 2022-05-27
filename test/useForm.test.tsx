@@ -1,38 +1,32 @@
 import { fireEvent, render, waitFor } from '@testing-library/react';
-import { object, createForm } from 'elderform';
+import { create } from 'elderform';
 import * as React from 'react';
-import * as z from 'zod';
 import { useForm } from '../src';
 
 (global as any).__DEV__ = false;
 
-const schema = object({
-  name: (v: string) => z.string().parse(v),
-});
-
-const form = createForm({
-  schema,
+const form = create({
   onSubmit: () => '123',
   initialValues: { name: 'Joe' },
 });
 
 const Component = () => {
-  const [ctx, { name }] = useForm(form);
+  const state = useForm(form);
 
   return (
     <div>
-      <p>{ctx.state}</p>
+      <p>{state.state}</p>
 
-      <code data-testid="output">{ctx.data}</code>
+      <code data-testid="output">{state.data}</code>
 
       <input
         readOnly
         type="text"
         data-testid="input"
-        value={name.value as any}
+        value={state.values.name}
       />
 
-      <button onClick={() => ctx.submit()}>submit</button>
+      <button onClick={() => state.submit()}>submit</button>
     </div>
   );
 };
