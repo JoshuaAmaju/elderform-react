@@ -14,7 +14,7 @@ const form = create<{ name: string }>({
 
 const Component = () => {
   return (
-    <Field name="name" validate={string}>
+    <Field name="name" onValidate={string}>
       {({ value }) => (
         <input readOnly type="text" data-testid="input" value={value as any} />
       )}
