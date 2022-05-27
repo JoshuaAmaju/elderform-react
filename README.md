@@ -26,7 +26,7 @@ const App = () => {
 
   return (
     <Form state={state}>
-      <Field name="name" initialValue="" validate={(v) => {}}>
+      <Field name="name" initialValue="" onValidate={(v) => {}}>
         {(name) => {
           return (
             <div>
@@ -91,11 +91,11 @@ import { Field } from '@elderform/react';
 const App = () => {
   return (
     <Form state={{}}>
-      <Field name="name" initialValue="" validate={() => {}}>
+      <Field name="name" initialValue="" onValidate={() => {}}>
         {(state) => <></>}
       </Field>
 
-      <Field name="email" initialValue="" validate={() => {}}>
+      <Field name="email" initialValue="" onValidate={() => {}}>
         {(state) => <></>}
       </Field>
     </Form>
