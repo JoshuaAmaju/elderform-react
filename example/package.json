@@ -9,7 +9,11 @@
     "build": "vite build"
   },
   "dependencies": {
-    "react-app-polyfill": "^3.0.0"
+    "elderform": "^1.1.1",
+    "nanoid": "^3.3.4",
+    "object-path": "^0.11.8",
+    "react-app-polyfill": "^3.0.0",
+    "yup": "^0.32.11"
   },
   "alias": {
     "react": "../node_modules/react",
@@ -19,8 +23,8 @@
   "devDependencies": {
     "@types/react": "^17.0.38",
     "@types/react-dom": "^17.0.11",
+    "typescript": "^4",
     "vite": "latest",
-    "vite-preset-react": "latest",
-    "typescript": "^4"
+    "vite-preset-react": "latest"
   }
 }
