@@ -1,35 +1,42 @@
 import { useActor } from '@xstate/react';
 import type { Validator } from 'elderform';
 import { actor as elderActor } from 'elderform';
-import { get } from 'object-path';
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import { ActorRef } from 'xstate';
 import type { FieldActions, FieldState } from './types';
 import { useElder } from './useElder';
+import { get } from 'object-path';
 
-function Actor<T extends object, E>({
+function Actor<T, E>({
   name,
   actor,
   children,
 }: {
-  name: keyof T;
+  name: string;
+  children: (state: FieldState<T, E>) => JSX.Element;
   actor: ActorRef<elderActor.Events, elderActor.States>;
-  children: (state: FieldState<T[keyof T], E>) => JSX.Element;
 }) {
-  const { set, validate } = useElder<T, any, any, E>();
+  const { set, validate } = useElder();
 
   const [current] = useActor(actor);
 
   const state = current.value;
 
+  // console.log(current?.event, name);
+
   const { value, error } = current.context;
 
-  const nSet = useCallback<FieldActions<T[keyof T]>['set']>(
+  const isIdle = current.value === 'idle';
+  const isError = current.value === 'error';
+  const isSuccess = current.value === 'success';
+  const isValidating = current.value === 'validating';
+
+  const nSet = useCallback<FieldActions<T>['set']>(
     (value) => set(name, value),
     [set, name]
   );
 
-  const nValidate = useCallback<FieldActions<T[keyof T]>['validate']>(
+  const nValidate = useCallback<FieldActions<T>['validate']>(
     (value) => validate(name, value),
     [name, validate]
   );
@@ -44,33 +51,99 @@ function Actor<T extends object, E>({
   //   [name, send]
   // );
 
-  return children({ state, error, value, set: nSet, validate: nValidate });
+  return children({
+    state,
+    isIdle,
+    isError,
+    isSuccess,
+    isValidating,
+
+    error,
+    value,
+    set: nSet,
+    validate: nValidate,
+  });
 }
 
-export function Field<T extends object = any, E = any>({
+export function Field<TValue = any, E = any, TValues extends object = any>({
   name,
   children,
   onValidate,
   initialValue,
 }: {
-  name: keyof T;
-  initialValue?: T[keyof T];
-  onValidate: Validator<T[keyof T], T>;
-  children: (state: FieldState<T[keyof T], E>) => JSX.Element;
+  name: string;
+  initialValue?: TValue;
+  onValidate: Validator<TValue, TValues>;
+  children: (state: FieldState<TValue, E>) => JSX.Element;
 }) {
-  const { actors, spawn, kill } = useElder<T, any, any, E>();
+  const { actors, spawn, kill, values, errors, states, set, validate } =
+    useElder();
 
-  const actor = useMemo(() => get(actors, name as string), [name, actors]);
+  let nName = useRef(name);
+
+  const validateFn = useRef(onValidate);
+
+  // const actor = useMemo(() => get(actors, name), [actors, name]);
+
+  const value = get(values, name);
+  const state = get(states, name);
+  const error = get(errors, name);
+
+  // console.log('error', error, name, errors);
+
+  const isIdle = state === 'idle';
+  const isError = state === 'error';
+  const isSuccess = state === 'success';
+  const isValidating = state === 'validating';
+
+  const nSet = useCallback<FieldActions<TValue>['set']>(
+    (value) => set(name, value),
+    [set, name]
+  );
+
+  const nValidate = useCallback<FieldActions<TValue>['validate']>(
+    (value) => validate(name, value),
+    [name, validate]
+  );
 
   useEffect(() => {
-    return () => kill(name as string);
-  }, [kill, name]);
+    validateFn.current = onValidate;
+  }, [onValidate]);
 
   useEffect(() => {
-    if (!actor) spawn(name as string, initialValue, onValidate);
-  }, [actor, name, spawn, onValidate, initialValue]);
+    const name = nName.current;
 
-  if (!actor) return null;
+    return () => {
+      console.log('killing...', name);
+      kill(name);
+    };
+  }, [kill, nName]);
 
-  return <Actor {...{ name, actor }}>{children}</Actor>;
+  // console.log(actors, name, get(actors, name));
+
+  useEffect(() => {
+    if (!actors[nName.current]) {
+      console.log('spawning...', nName.current);
+      spawn(nName.current, initialValue, validateFn.current);
+    }
+  }, [actors, nName, spawn, onValidate, initialValue]);
+
+  return children({
+    state,
+    isIdle,
+    isError,
+    isSuccess,
+    isValidating,
+
+    error,
+    value,
+    set: nSet,
+    validate: nValidate,
+  });
+
+  // if (!actor) return null;
+
+  // console.log('here...');
+
+  // return <Actor {...{ name, actor }}>{children}</Actor>;
 }

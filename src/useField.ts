@@ -1,20 +1,12 @@
 import { useActor } from '@xstate/react';
-import { get } from 'object-path';
-import { useCallback, useMemo } from 'react';
-import { ActorRef } from 'xstate';
+import { useCallback } from 'react';
+import { FieldActions, FieldState } from './types';
 import { useElder } from './useElder';
-import { FieldState, FieldActions } from './types';
-import { actor as elderActor } from 'elderform';
 
-export function useField<T extends object, E = any>(
-  name: keyof T
-): FieldState<T[keyof T], E> | null {
-  const { set, actors, validate } = useElder<T, any, any, E>();
+export function useField<T, E = any>(name: string): FieldState<T, E> | null {
+  const { set, actors, validate } = useElder();
 
-  const actor = useMemo<ActorRef<elderActor.Events, elderActor.States>>(
-    () => get(actors, name as string),
-    [name, actors]
-  );
+  const actor = actors[name];
 
   const [current] = useActor(actor);
 
@@ -22,21 +14,31 @@ export function useField<T extends object, E = any>(
 
   const { value, error } = current.context;
 
-  // const state = get(states, name as string);
+  const isIdle = current.value === 'idle';
+  const isError = current.value === 'error';
+  const isSuccess = current.value === 'success';
+  const isValidating = current.value === 'validating';
 
-  // const value = get(values, name as string);
-
-  // const error = get(errors, name as string);
-
-  const nSet = useCallback<FieldActions<T[keyof T]>['set']>(
+  const nSet = useCallback<FieldActions<T>['set']>(
     (value) => set(name, value),
     [set, name]
   );
 
-  const nValidate = useCallback<FieldActions<T[keyof T]>['validate']>(
+  const nValidate = useCallback<FieldActions<T>['validate']>(
     (value) => validate(name, value),
     [name, validate]
   );
 
-  return { state, error, value, set: nSet, validate: nValidate };
+  return {
+    state,
+    isIdle,
+    isError,
+    isSuccess,
+    isValidating,
+
+    error,
+    value,
+    set: nSet,
+    validate: nValidate,
+  };
 }

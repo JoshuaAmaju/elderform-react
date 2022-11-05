@@ -11,4 +11,7 @@ export type FieldActions<T> = {
 };
 
 export type FieldState<T, E> = FieldActions<T> &
-  actor.Ctx<T, E> & { state: ActorState };
+  actor.Ctx<T, E> & { state: ActorState } & Record<
+    'isIdle' | 'isValidating' | 'isError' | 'isSuccess',
+    boolean
+  >;

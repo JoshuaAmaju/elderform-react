@@ -32,7 +32,12 @@ const App = () => {
             <div>
               <div>
                 <label htmlFor="name">Name</label>
-                <input type="text" name="name" value={name.value} />
+                <input
+                  type="text"
+                  name="name"
+                  value={name.value}
+                  onBlur={() => name.validate()}
+                />
               </div>
 
               {name.error && <p>{name.error}</p>}
@@ -167,6 +172,7 @@ const App = () => {
 ## Examples
 
 - [Dynamic form](https://codesandbox.io/s/elderform-react-dynamic-form-2bmmo?file=/src/App.tsx)
+- [Nested form](https://codesandbox.io/s/elderform-react-dynamic-form-2bmmo?file=/src/App.tsx)
 <!-- - [Dynamic form with validation]() (coming soon) -->
 
 ## License

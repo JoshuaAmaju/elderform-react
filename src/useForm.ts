@@ -26,6 +26,8 @@ export function useForm<
     errorUpdatedAt,
   } = current.context;
 
+  // console.log(current.event);
+
   const state = current.value as FormState;
 
   const isIdle = current.matches('idle');
